@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, path::Component};
 use walkdir::WalkDir;
 
 #[derive(Debug)]
@@ -36,9 +36,13 @@ pub fn load_schema(root: &str) -> Vec<Table> {
         .map(|it| {
             Table::parse(
                 &it.clone()
-                    .into_os_string()
-                    .into_string()
-                    .unwrap_or_else(|os_string| panic!("Failed to into_string {:?}", os_string)),
+                    .components()
+                    .collect::<Vec<Component>>()
+                    .last()
+                    .unwrap()
+                    .as_os_str()
+                    .to_str()
+                    .unwrap_or_else(|| panic!("Failed to into_string {:?}", it)),
                 &fs::read_to_string(&it).unwrap_or_else(|err| panic!("{}", err)),
             )
         })
