@@ -27,7 +27,7 @@ async fn loop_enforce_all(pool: &Pool) {
     loop {
         for table in load_schema(SCHEMA_ROOT).iter() {
             if let Err(why) = enforce(pool, table).await {
-                println!("Failed to enforce {}: {}", table.name, why);
+                println!("Failed to enforce {}: \n{}", table.name, why);
             };
         }
 
