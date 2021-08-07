@@ -5,13 +5,24 @@ use walkdir::WalkDir;
 pub struct Table {
     pub name: String,
     pub fields: Vec<String>,
+    pub field_schemas: Vec<String>,
 }
 
 impl Table {
     pub fn parse(name: &str, content: &str) -> Self {
+        let field_schemas = content
+            .split('\n')
+            .filter(|it| !it.is_empty())
+            .map(|it| it.into())
+            .collect::<Vec<String>>();
+
         Self {
             name: name.into(),
-            fields: content.split('\n').map(|it| it.into()).collect(),
+            fields: field_schemas
+                .iter()
+                .map(|it| it.split(' ').next().unwrap().into())
+                .collect(),
+            field_schemas,
         }
     }
 }
