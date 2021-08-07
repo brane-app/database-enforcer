@@ -6,8 +6,12 @@ edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
+[dependencies.futures]
+version = "~0.3"
 
 [dependencies.tokio]
-versoin = "~>1.9"
+versoin = "~1.9"
 features = ["full"]
+
+[dependencies.walkdir]
+version = "~2.3"
