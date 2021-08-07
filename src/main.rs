@@ -10,18 +10,20 @@ use tokio::time::sleep;
 const FREQUENCY: Duration = Duration::from_millis(10_000);
 
 async fn enforce_all(tables: Vec<Table>) {
-    loop {
-        for table in &tables {
-            unimplemented!();
-        }
+    unimplemented!();
+}
 
-        sleep(FREQUENCY).await;
+async fn loop_enforce_all() {
+    loop {
+        enforce_all(load_schema("./schema")).await
     }
+
+    sleep(FREQUENCY).await;
 }
 
 #[tokio::main]
 async fn main() {
-    join!(enforce_all(load_schema("./schema")));
+    join!(loop_enforce_all());
 
     println!("Hello, async");
 }
