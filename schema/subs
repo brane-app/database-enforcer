@@ -2,4 +2,4 @@ subscriber CHAR(36) NOT NULL
 subscription CHAR(36) NOT NULL
 created BIGINT UNSIGNED NOT NULL
 order_index BIGINT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT
-CONSTRAINT no_dupe_subscriptions UNIQUE(subscriber subscription)
+CONSTRAINT no_dupe_subscriptions UNIQUE(subscriber, subscription)
