@@ -76,7 +76,7 @@ jobs:
     strategy:
       matrix:
         repo:
-          - ${{ secrets.DOCKERHUB_USERNAME }}/brane-${{ github.event.repository.name }}
+          - "${{ secrets.DOCKERHUB_USERNAME }}/brane-${{ github.event.repository.name }}"
         tag:
           - latest
     steps:
