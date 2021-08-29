@@ -30,19 +30,13 @@ jobs:
       - name: Install
         run: sudo /tmp/awscli/aws/install --update
 
-  rustup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Use nightly
-        run: rustup default nightly
-
   build:
     runs-on: ubuntu-latest
-    needs:
-      - rustup
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Use nightly
+        run: rustup default nightly
       - name: Build package
         run: cargo build --release
 
@@ -53,6 +47,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Use nightly
+        run: rustup default nightly
       - name: Clippy
         run: cargo clippy
 
@@ -68,6 +64,8 @@ jobs:
           mysql root password: foobar2000
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Use nightly
+        run: rustup default nightly
       - name: Run tests
         env:
           DATABASE_CONNECTION: "mysql://root:foobar2000@localhost/brane"
