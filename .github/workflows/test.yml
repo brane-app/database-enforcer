@@ -42,7 +42,7 @@ jobs:
       - name: Add clippy
         run: rustup component add clippy
       - name: Clippy
-        run: cargo clippy
+        run: cargo clippy -- -D warnings
 
   test:
     runs-on: ubuntu-latest
