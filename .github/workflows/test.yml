@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ref
-        run: echo $${{ github.ref }}
+        run: echo ${{ github.ref }}
       - name: Head ref
-        run: echo $${{ github.head_ref }}
+        run: echo ${{ github.head_ref }}
       - name: Cargo version
         run: cargo version
 
@@ -62,12 +62,9 @@ jobs:
           mysql root password: foobar2000
       - name: Check out code
         uses: actions/checkout@v2
-      - name: Get dependencies
-        run: GOPROXY=direct go get -u ./...
       - name: Run tests
         env:
           DATABASE_CONNECTION: "mysql://root:foobar2000@localhost/brane"
-          NO_FERROTHORN: "true"
         run: cargo test
 
   docker-dockerhub:
@@ -79,7 +76,7 @@ jobs:
     strategy:
       matrix:
         repo:
-          - ${dockerhub_username}/brane-$${{ github.event.repository.name }}
+          - ${{ secrets.DOCKERHUB_USERNAME }}/brane-${{ github.event.repository.name }}
         tag:
           - latest
     steps:
@@ -90,13 +87,13 @@ jobs:
       - name: Dockerhub login
         uses: docker/login-action@v1
         with:
-          username: $${{ secrets.DOCKERHUB_USERNAME }}
-          password: $${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build image
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: $${{ matrix.repo }}:$${{ matrix.tag }}
+          tags: ${{ matrix.repo }}:${{ matrix.tag }}
 
   docker-ecr:
     if: github.ref == 'refs/heads/master' && github.head_ref == ''
@@ -108,7 +105,7 @@ jobs:
     strategy:
       matrix:
         repo:
-          - public.ecr.aws/${ecr_namespace}/brane-$${{ github.event.repository.name }}
+          - public.ecr.aws/${{ secrets.ECR_NAMESPACE }}/brane-${{ github.event.repository.name }}-service
         tag:
           - latest
     steps:
@@ -119,15 +116,15 @@ jobs:
       - name: AWS config
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: $${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: $${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${aws_region}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
       - name: ECR-public login
         run: >-
-          aws ecr-public get-login-password --region ${aws_region} |
-          docker login --username AWS --password-stdin public.ecr.aws/${ecr_namespace}
+          aws ecr-public get-login-password --region us-east-1 |
+          docker login --username AWS --password-stdin public.ecr.aws/${{ secrets.ECR_NAMESPACE }}
       - name: Build image
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: $${{ matrix.repo }}:$${{ matrix.tag }}
+          tags: ${{ matrix.repo }}:${{ matrix.tag }}
