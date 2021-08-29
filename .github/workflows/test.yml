@@ -13,6 +13,8 @@ jobs:
         run: echo ${{ github.ref }}
       - name: Head ref
         run: echo ${{ github.head_ref }}
+      - name: Use nightly
+        run: rustup default nightly
       - name: Cargo version
         run: cargo version
 
