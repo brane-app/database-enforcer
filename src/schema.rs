@@ -34,8 +34,10 @@ pub fn load_schema(root: &str) -> Vec<Table> {
         .map(|it| it.unwrap_or_else(|err| panic!("{}", err)).into_path())
         .filter(|it| it.is_file())
         .map(|it| {
+            let component_clone = it.clone();
+
             Table::parse(
-                &it.clone()
+                component_clone
                     .components()
                     .collect::<Vec<Component>>()
                     .last()
